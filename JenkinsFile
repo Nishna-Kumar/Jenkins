@@ -63,7 +63,7 @@ pipeline {
             // Send email notification with status and logs attached
             emailext subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME} (${env.BUILD_NUMBER})",
                       body: "Pipeline ${currentBuild.result}: ${env.JOB_NAME} (${env.BUILD_NUMBER})\n\nCheck the attached logs for details.",
-                      to: 's223566653@deakin.edu.au',
+                      to: 'nishna202@gmail.com',
                       attachLog: true
         }
     }
