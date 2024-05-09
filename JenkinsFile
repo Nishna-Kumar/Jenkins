@@ -71,5 +71,12 @@ pipeline {
                       to: 'nishna202@gmail.com',
                       attachLog: true
         }
+        failure {
+            echo 'Build failed! Sending email notification...'
+            emailext subject: "Pipeline Failure: ${env.JOB_NAME} (${env.BUILD_NUMBER})",
+                      body: "The pipeline ${env.JOB_NAME} (${env.BUILD_NUMBER}) has failed.\n\nCheck the attached logs for details.",
+                      to: 'nishna202@gmail.com',
+                      attachLog: true
+        }
     }
 }
