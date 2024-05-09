@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                // Build the code using Maven
+                sh 'mvn clean package'
+            }
+        }
+        
+        stage('Unit and Integration Tests') {
+            steps {
+                // Run unit tests using JUnit
+                sh 'mvn test'
+                
+                // Run integration tests using Selenium
+                sh 'mvn integration-test'
+            }
+        }
+        
+        stage('Code Analysis') {
+            steps {
+                // Integrate code analysis using SonarQube
+                sh 'mvn sonar:sonar'
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                // Perform security scan using OWASP Dependency-Check
+                sh 'dependency-check.sh --scan /Jenkins'
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            steps {
+                // Deploy application to staging server using Jenkins Deploy Plugin
+                // Example:
+                // sh 'jenkins-deploy-plugin deploy --env staging'
+            }
+        }
+        
+        stage('Integration Tests on Staging') {
+            steps {
+                // Run integration tests on staging environment
+                // Example:
+                // sh 'mvn integration-test -Denvironment=staging'
+            }
+        }
+        
+        stage('Deploy to Production') {
+            steps {
+                // Deploy application to production server using Jenkins Deploy Plugin
+                // Example:
+                // sh 'jenkins-deploy-plugin deploy --env production'
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Send email notification with status and logs attached
+            emailext subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME} (${env.BUILD_NUMBER})",
+                      body: "Pipeline ${currentBuild.result}: ${env.JOB_NAME} (${env.BUILD_NUMBER})\n\nCheck the attached logs for details.",
+                      to: 's223566653@deakin.edu.au',
+                      attachLog: true
+        }
+    }
+}
